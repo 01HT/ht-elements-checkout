@@ -1,1 +1,1 @@
-# ht-elements-purchases
+# ht-elements-checkout

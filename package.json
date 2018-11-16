@@ -1,0 +1,17 @@
+{
+  "name": "@01ht/ht-elements-checkout",
+  "version": "1.0.0",
+  "main": "ht-elements-checkout.js",
+  "repository": "01ht/ht-elements-checkout",
+  "author": "01HT Ltd",
+  "license": "UNLICENSED",
+  "dependencies": {
+    "@polymer/lit-element": "^0.6.1",
+    "@polymer/iron-icon": "^3.0.1",
+    "@polymer/iron-iconset-svg": "^3.0.1",
+    "@polymer/paper-button": "^3.0.1",
+    "@polymer/iron-collapse": "^3.0.1",
+    "@01ht/ht-spinner": "01ht/ht-spinner",
+    "@01ht/ht-image": "01ht/ht-image"
+  }
+}
