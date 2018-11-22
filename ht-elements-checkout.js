@@ -1,12 +1,17 @@
 "use strict";
 import { LitElement, html } from "@polymer/lit-element";
 import "@polymer/paper-button";
-import "@polymer/paper-ripple";
+import "@polymer/paper-tooltip";
+import "./ht-elements-checkout-order-completed.js";
 import "./ht-elements-checkout-details.js";
+import {
+  // callTestHTTPFunction,
+  callFirebaseHTTPFunction
+} from "@01ht/ht-client-helper-functions";
 
 class HTElementsCheckout extends LitElement {
   render() {
-    const { data, balance, paymentMethod, iframeMode } = this;
+    const { data, balance, paymentMethod, loading, loadingText } = this;
     return html`
     ${SharedStyles}
     <style>
@@ -67,14 +72,16 @@ class HTElementsCheckout extends LitElement {
         padding: 24px 8px 16px 8px;
         width: calc(50% - 8px);
         position: relative;
-        border: 1px solid #ddd;
+        border: 3px solid #ddd;
         background: #fafafa;
         color: #424242;
+        box-sizing: border-box;
+        position:relative;
       }
 
       .payment-button[selected] {
         background: #fff;
-        border: 1px solid var(--accent-color);
+        border: 3px solid var(--accent-color);
       }
 
       .payment-button[disabled] {
@@ -127,20 +134,27 @@ class HTElementsCheckout extends LitElement {
         color: var(--secondary-text-color);
       }
 
-      iframe {
-        height: 600px;
-        overflow: auto;
-      }
-
-      #bank-iframe {
-        overflow: auto;
+      [hidden] {
+        display:none;
       }
     </style>
     <div id="container">
-      <h1 class="mdc-typography--headline5">Оплата</h1>
       ${
-        !iframeMode
+        loading
+          ? html`<ht-spinner page text=${loadingText}></ht-spinner>`
+          : null
+      }
+      ${
+        data && data.completed && !loading
           ? html`
+            <ht-elements-checkout-order-completed .data=${data}></ht-elements-checkout-order-completed>
+          `
+          : null
+      }
+      ${
+        data && !data.completed && !loading
+          ? html`
+            <h1 class="mdc-typography--headline5">Оплата</h1>
         <div id="settings" class="card">
           <div id="choose-method">
             <h2 class="mdc-typography--headline6">Выберите способ оплаты</h2>
@@ -160,7 +174,9 @@ class HTElementsCheckout extends LitElement {
             }}>
               <img src="https://res.cloudinary.com/cdn-01ht/image/upload/v1530624792/logos/01ht/logo.svg" alt="Bank card payment">
               <div class="payment-text">Баланс 01HT <span>($${balance})</span></div>
-            </paper-button>
+            <paper-tooltip ?hidden=${data &&
+              data.amount >
+                balance}>Недостаточно средств</paper-tooltip></paper-button>
           </div>
           <div class="separator"></div>
           <div id="order-details">
@@ -179,15 +195,7 @@ class HTElementsCheckout extends LitElement {
             }}>Оплатить</paper-button>
           </div>
         </div>`
-          : html`<div id="bank-iframe" class="card">
-        <iframe src="https://alfabank.ru" frameborder="0"></iframe>
-        <div class="separator"></div>
-        <div class="actions">
-            <paper-button raised @click=${_ => {
-              this._back();
-            }}>Назад</paper-button>
-          </div>
-      </div>`
+          : null
       }
     </div>
 `;
@@ -202,22 +210,144 @@ class HTElementsCheckout extends LitElement {
       data: { type: Object },
       balance: { type: Number },
       paymentMethod: { type: String },
-      iframeMode: { type: Boolean }
+      loading: { type: Boolean },
+      loadingText: { type: String }
     };
   }
 
+  firstUpdated() {
+    if (this.data && !this.data.completed) {
+      this._handleOrder(this.data.orderId);
+    }
+  }
+
   _changePaymentMethod(paymentMethod) {
-    this.paymentMethod = paymentMethod;
+    if (this.paymentMethod === paymentMethod) {
+      this.paymentMethod = undefined;
+    } else {
+      this.paymentMethod = paymentMethod;
+    }
   }
 
-  _back() {
-    this.iframeMode = false;
+  async _pay() {
+    this.loading = true;
+    let orderId = this.data.orderId;
+    let paymentMethod = this.paymentMethod;
+    if (paymentMethod === "card") {
+      await this._payViaCard(orderId);
+    }
+    if (paymentMethod === "balance") {
+      await this._payViaBalance(orderId);
+    }
+    this._handleOrder(orderId);
   }
 
-  _pay() {
-    console.log(this.paymentMethod);
-    if (this.paymentMethod === "card") {
-      this.iframeMode = true;
+  async _payViaCard(orderId) {
+    let bankPaymentPageURL = await this._registerOrderInBank(orderId);
+    await this.handlePaymentSystemOrder(orderId);
+    // location = "yandex.payment.url"
+    // let response = await callFirebaseHTTPFunction({
+    //   name: "httpsOrdersPayOrderViaBalance",
+    //   authorization: true,
+    //   options: {
+    //     method: "POST",
+    //     headers: {
+    //       "Content-Type": "application/json"
+    //     },
+    //     body: JSON.stringify({
+    //       orderId: orderId
+    //     })
+    //   }
+    // });
+    // if (response.error) throw new Error(response.error);
+  }
+
+  async _registerOrderInBank(orderId) {
+    this.loadingText = "Подготовка платежной системы";
+    let response = await callFirebaseHTTPFunction({
+      name: "httpsOrdersRegisterOrderInBank",
+      authorization: true,
+      options: {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          orderId: orderId
+        })
+      }
+    });
+    if (response.error) throw new Error(response.error);
+    return response.paymentSystemOrderId;
+  }
+
+  async handlePaymentSystemOrder(orderId) {
+    this.loading = true;
+    this.loadingText = "Проверка оплаты заказа";
+    // location = "yandex.payment.url";
+    let response = await callFirebaseHTTPFunction({
+      name: "httpsOrdersHandlePaymentSystemOrder",
+      authorization: true,
+      options: {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          orderId: orderId
+        })
+      }
+    });
+    if (response.error) throw new Error(response.error);
+  }
+
+  async _payViaBalance(orderId) {
+    this.loadingText = "Оплата заказа";
+    let response = await callFirebaseHTTPFunction({
+      name: "httpsOrdersPayOrderViaBalance",
+      authorization: true,
+      options: {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          orderId: orderId
+        })
+      }
+    });
+    if (response.error) throw new Error(response.error);
+  }
+
+  async _handleOrder(orderId) {
+    try {
+      this.loading = true;
+      this.loadingText = "Обработка заказа";
+      let response = await callFirebaseHTTPFunction({
+        name: "httpsOrdersHandleOrderIndex",
+        authorization: true,
+        options: {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            orderId: orderId
+          })
+        }
+      });
+      this.loading = false;
+      if (response.code === 1) {
+        this.dispatchEvent(
+          new CustomEvent("on-clear-cart", {
+            bubbles: true,
+            composed: true
+          })
+        );
+      }
+      // if (response.error) throw new Error(response.error);
+    } catch (error) {
+      this.loading = false;
     }
   }
 }
