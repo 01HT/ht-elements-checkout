@@ -1,7 +1,8 @@
 "use strict";
 import { LitElement, html } from "@polymer/lit-element";
 import "@polymer/paper-button";
-import "@polymer/paper-tooltip";
+
+import "./ht-elements-checkout-payment-method-changer.js";
 import "./ht-elements-checkout-order-completed.js";
 import "./ht-elements-checkout-details.js";
 import {
@@ -11,7 +12,7 @@ import {
 
 class HTElementsCheckout extends LitElement {
   render() {
-    const { data, balance, paymentMethod, loading, loadingText } = this;
+    const { data, loading, loadingText, paymentType } = this;
     return html`
     ${SharedStyles}
     <style>
@@ -26,8 +27,12 @@ class HTElementsCheckout extends LitElement {
         font-size: 18px;
       }
 
+      .card ht-elements-checkout-payment-method-changer {
+        padding: 0;
+      }
+
       #container {
-        max-width: 800px;
+        max-width: 600px;
         margin: auto;
       }
 
@@ -39,7 +44,6 @@ class HTElementsCheckout extends LitElement {
         justify-content: space-between;
         border-radius:3px;
         background: #fff;
-        overflow:hidden;
         box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12), 0 3px 1px -2px rgba(0, 0, 0, 0.2);
       }
 
@@ -51,58 +55,6 @@ class HTElementsCheckout extends LitElement {
         background: #ddd;
         height: 1px;
         padding: 0;
-      }
-
-      #payment-method {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content:space-between;
-        position: relative;
-        padding-top: 0;
-      }
-
-      .payment-button {
-        text-align: center;
-        display:flex;
-        flex-direction: column;
-        align-items:center;
-        justify-content:center;
-        border-radius: 6px;
-        text-transform: none;
-        padding: 24px 8px 16px 8px;
-        width: calc(50% - 8px);
-        position: relative;
-        border: 3px solid #ddd;
-        background: #fafafa;
-        color: #424242;
-        box-sizing: border-box;
-        position:relative;
-      }
-
-      .payment-button[selected] {
-        background: #fff;
-        border: 3px solid var(--accent-color);
-      }
-
-      .payment-button[disabled] {
-        filter: grayscale(1);
-      }
-
-      .payment-button img {
-        width: 48px;
-        height: 48px;
-      }
-
-      .payment-text {
-        margin-top: 8px;
-        font-size: 16px;
-        line-height: 1.3;
-      }
-
-      .payment-button span {
-        margin-top: 8px;
-        font-size: 14px;
-        color: var(--secondary-text-color);
       }
 
       #amount, .actions {
@@ -133,10 +85,6 @@ class HTElementsCheckout extends LitElement {
         font-size: 14px;
         color: var(--secondary-text-color);
       }
-
-      [hidden] {
-        display:none;
-      }
     </style>
     <div id="container">
       ${
@@ -156,28 +104,7 @@ class HTElementsCheckout extends LitElement {
           ? html`
             <h1 class="mdc-typography--headline5">Оплата</h1>
         <div id="settings" class="card">
-          <div id="choose-method">
-            <h2 class="mdc-typography--headline6">Выберите способ оплаты</h2>
-          </div>
-          <div id="payment-method">
-            <paper-button id="bank-card" class="payment-button" ?selected=${paymentMethod ==
-              "card"} @click=${_ => {
-              this._changePaymentMethod("card");
-            }}>
-              <img src="https://res.cloudinary.com/cdn-01ht/image/upload/v1542287537/apps/elements/pages/checkout/card.svg" alt="Bank card payment">
-              <div class="payment-text">Банковская карта</div>
-            </paper-button>
-            <paper-button id="balance" class="payment-button" ?selected=${paymentMethod ==
-              "balance"} ?disabled=${data &&
-              data.amount > balance} @click=${_ => {
-              this._changePaymentMethod("balance");
-            }}>
-              <img src="https://res.cloudinary.com/cdn-01ht/image/upload/v1530624792/logos/01ht/logo.svg" alt="Bank card payment">
-              <div class="payment-text">Баланс 01HT <span>($${balance})</span></div>
-            <paper-tooltip ?hidden=${data &&
-              data.amount >
-                balance}>Недостаточно средств</paper-tooltip></paper-button>
-          </div>
+          <ht-elements-checkout-payment-method-changer .paymentType=${paymentType}></ht-elements-checkout-payment-method-changer>
           <div class="separator"></div>
           <div id="order-details">
             <ht-elements-checkout-details .data=${data}></ht-elements-checkout-details>
@@ -189,7 +116,7 @@ class HTElementsCheckout extends LitElement {
             }</div>
           </div>
           <div class="separator"></div>
-          <div class="actions" ?hidden=${paymentMethod === undefined}>
+          <div class="actions">
             <paper-button raised @click=${_ => {
               this._pay();
             }}>Оплатить</paper-button>
@@ -208,123 +135,38 @@ class HTElementsCheckout extends LitElement {
   static get properties() {
     return {
       data: { type: Object },
-      balance: { type: Number },
-      paymentMethod: { type: String },
       loading: { type: Boolean },
-      loadingText: { type: String }
+      loadingText: { type: String },
+      paymentType: { type: String }
     };
   }
 
-  firstUpdated() {
-    if (this.data && !this.data.completed) {
-      this._handleOrder(this.data.orderId);
+  shouldUpdate(changedProperties) {
+    if (changedProperties.has("data")) {
+      if (this.data && this.data.paymentObject) {
+        this.paymentType = this.data.paymentObject.payment_method.type;
+        this._handlePayment(this.data.paymentObject.id);
+      } else {
+        this.paymentType = "bank_card";
+      }
     }
+    return true;
   }
 
-  _changePaymentMethod(paymentMethod) {
-    if (this.paymentMethod === paymentMethod) {
-      this.paymentMethod = undefined;
-    } else {
-      this.paymentMethod = paymentMethod;
-    }
+  get paymentTypeBlock() {
+    return this.shadowRoot.querySelector(
+      "ht-elements-checkout-payment-method-changer"
+    );
   }
 
   async _pay() {
-    this.loading = true;
-    let orderId = this.data.orderId;
-    let paymentMethod = this.paymentMethod;
-    if (paymentMethod === "card") {
-      await this._payViaCard(orderId);
-    }
-    if (paymentMethod === "balance") {
-      await this._payViaBalance(orderId);
-    }
-    this._handleOrder(orderId);
-  }
-
-  async _payViaCard(orderId) {
-    let bankPaymentPageURL = await this._registerOrderInBank(orderId);
-    await this.handlePaymentSystemOrder(orderId);
-    // location = "yandex.payment.url"
-    // let response = await callFirebaseHTTPFunction({
-    //   name: "httpsOrdersPayOrderViaBalance",
-    //   authorization: true,
-    //   options: {
-    //     method: "POST",
-    //     headers: {
-    //       "Content-Type": "application/json"
-    //     },
-    //     body: JSON.stringify({
-    //       orderId: orderId
-    //     })
-    //   }
-    // });
-    // if (response.error) throw new Error(response.error);
-  }
-
-  async _registerOrderInBank(orderId) {
-    this.loadingText = "Подготовка платежной системы";
-    let response = await callFirebaseHTTPFunction({
-      name: "httpsOrdersRegisterOrderInBank",
-      authorization: true,
-      options: {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          orderId: orderId
-        })
-      }
-    });
-    if (response.error) throw new Error(response.error);
-    return response.paymentSystemOrderId;
-  }
-
-  async handlePaymentSystemOrder(orderId) {
-    this.loading = true;
-    this.loadingText = "Проверка оплаты заказа";
-    // location = "yandex.payment.url";
-    let response = await callFirebaseHTTPFunction({
-      name: "httpsOrdersHandlePaymentSystemOrder",
-      authorization: true,
-      options: {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          orderId: orderId
-        })
-      }
-    });
-    if (response.error) throw new Error(response.error);
-  }
-
-  async _payViaBalance(orderId) {
-    this.loadingText = "Оплата заказа";
-    let response = await callFirebaseHTTPFunction({
-      name: "httpsOrdersPayOrderViaBalance",
-      authorization: true,
-      options: {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          orderId: orderId
-        })
-      }
-    });
-    if (response.error) throw new Error(response.error);
-  }
-
-  async _handleOrder(orderId) {
     try {
       this.loading = true;
-      this.loadingText = "Обработка заказа";
+      this.loadingText = "Подготовка платежной системы";
+      let orderId = this.data.orderId;
+      let paymentMethod = this.paymentTypeBlock.paymentType;
       let response = await callFirebaseHTTPFunction({
-        name: "httpsOrdersHandleOrderIndex",
+        name: "httpsOrdersCreatePayment",
         authorization: true,
         options: {
           method: "POST",
@@ -332,7 +174,38 @@ class HTElementsCheckout extends LitElement {
             "Content-Type": "application/json"
           },
           body: JSON.stringify({
-            orderId: orderId
+            orderId: orderId,
+            paymentType: paymentMethod
+          })
+        }
+      });
+      let paymentPageURL = response.confirmation.confirmation_url;
+      window.location = paymentPageURL;
+    } catch (error) {
+      console.log("_pay: " + error.message);
+      this.loading = false;
+    }
+  }
+
+  async _handlePayment(paymentId) {
+    try {
+      if (
+        (this.data && this.data.completed) ||
+        this.data.paymentObject === undefined
+      )
+        return;
+      this.loading = true;
+      this.loadingText = "Обработка заказа";
+      let response = await callFirebaseHTTPFunction({
+        name: "httpsOrdersHandlePayment",
+        authorization: true,
+        options: {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            paymentId: paymentId
           })
         }
       });
@@ -345,7 +218,6 @@ class HTElementsCheckout extends LitElement {
           })
         );
       }
-      // if (response.error) throw new Error(response.error);
     } catch (error) {
       this.loading = false;
     }
