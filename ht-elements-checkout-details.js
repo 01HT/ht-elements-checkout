@@ -3,7 +3,7 @@ import { LitElement, html } from "@polymer/lit-element";
 import "@polymer/iron-iconset-svg/iron-iconset-svg.js";
 import "@polymer/iron-icon/iron-icon.js";
 import "@polymer/iron-collapse";
-import "./ht-elements-checkout-details-order-info.js";
+import "@01ht/ht-elements-orders/ht-elements-orders-item-details.js";
 
 class HTElementsCheckoutDetails extends LitElement {
   render() {
@@ -90,9 +90,9 @@ class HTElementsCheckoutDetails extends LitElement {
             opened ? "expand-less" : "expand-more"
           }"></iron-icon></div>
           <iron-collapse ?opened=${opened}>
-            <ht-elements-checkout-details-order-info .items=${
+            <ht-elements-orders-item-details .items=${
               data.items
-            }></ht-elements-checkout-details-order-info>
+            }></ht-elements-orders-item-details>
             </iron-collapse>
         </div>`
         : null
