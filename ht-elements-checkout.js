@@ -1,5 +1,5 @@
 "use strict";
-import { LitElement, html } from "@polymer/lit-element";
+import { LitElement, html, css } from "lit-element";
 import "@polymer/paper-button";
 
 import "./ht-elements-checkout-payment-method-changer.js";
@@ -11,11 +11,9 @@ import {
 } from "@01ht/ht-client-helper-functions";
 
 class HTElementsCheckout extends LitElement {
-  render() {
-    const { data, loading, loadingText, paymentType } = this;
-    return html`
-    ${SharedStyles}
-    <style>
+  static styles = [
+    window.SharedStyles,
+    css`<style>
       :host {
         display: block;
         position: relative;
@@ -85,17 +83,22 @@ class HTElementsCheckout extends LitElement {
         font-size: 14px;
         color: var(--secondary-text-color);
       }
-    </style>
+    </style>`
+  ];
+
+  render() {
+    const { data, loading, loadingText, paymentType } = this;
+    return html`
     <div id="container">
       ${
         loading
-          ? html`<ht-spinner page text=${loadingText}></ht-spinner>`
+          ? html`<ht-spinner page text="${loadingText}"></ht-spinner>`
           : null
       }
       ${
         data && data.completed && !loading
           ? html`
-            <ht-elements-checkout-order-completed .data=${data}></ht-elements-checkout-order-completed>
+            <ht-elements-checkout-order-completed .data="${data}"></ht-elements-checkout-order-completed>
           `
           : null
       }
@@ -104,10 +107,10 @@ class HTElementsCheckout extends LitElement {
           ? html`
             <h1 class="mdc-typography--headline5">Оплата</h1>
         <div id="settings" class="card">
-          <ht-elements-checkout-payment-method-changer .paymentType=${paymentType}></ht-elements-checkout-payment-method-changer>
+          <ht-elements-checkout-payment-method-changer .paymentType="${paymentType}"></ht-elements-checkout-payment-method-changer>
           <div class="separator"></div>
           <div id="order-details">
-            <ht-elements-checkout-details .data=${data}></ht-elements-checkout-details>
+            <ht-elements-checkout-details .data="${data}"></ht-elements-checkout-details>
           </div>
           <div class="separator"></div>
           <div id="amount">
@@ -117,19 +120,13 @@ class HTElementsCheckout extends LitElement {
           </div>
           <div class="separator"></div>
           <div class="actions">
-            <paper-button raised @click=${_ => {
-              this._pay();
-            }}>Оплатить</paper-button>
+            <paper-button raised @click="${this._pay}">Оплатить</paper-button>
           </div>
         </div>`
           : null
       }
     </div>
 `;
-  }
-
-  static get is() {
-    return "ht-elements-checkout";
   }
 
   static get properties() {
@@ -224,4 +221,4 @@ class HTElementsCheckout extends LitElement {
   }
 }
 
-customElements.define(HTElementsCheckout.is, HTElementsCheckout);
+customElements.define("ht-elements-checkout", HTElementsCheckout);

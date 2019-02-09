@@ -1,15 +1,13 @@
 "use strict";
-import { LitElement, html } from "@polymer/lit-element";
+import { LitElement, html, css } from "lit-element";
 import "@polymer/iron-iconset-svg/iron-iconset-svg.js";
 import "@polymer/iron-icon/iron-icon.js";
 import "@polymer/paper-ripple";
 
 class HTElementsCheckoutPaymentMethodChanger extends LitElement {
-  render() {
-    const { paymentType, opened } = this;
-    return html`
-    ${SharedStyles}
-        <style>
+  static styles = [
+    window.SharedStyles,
+    css`<style>
         :host {
             display: flex;
             position: relative;
@@ -91,7 +89,12 @@ class HTElementsCheckoutPaymentMethodChanger extends LitElement {
         [hidden] {
             display:none;
         }
-    </style>
+    </style>`
+  ];
+
+  render() {
+    const { paymentType, opened } = this;
+    return html`
     <iron-iconset-svg size="24" name="ht-elements-checkout-payment-method-changer-icons">
       <svg>
         <defs>
@@ -100,41 +103,39 @@ class HTElementsCheckoutPaymentMethodChanger extends LitElement {
       </svg>
     </iron-iconset-svg>
     <div id="container">
-        <div id="changer" @click=${_ => {
-          this._open();
-        }}>
+        <div id="changer" @click="${this._open}">
             <div class="list-dropdown">
-                <div id="bank-card" class="item" ?hidden=${paymentType !==
-                  "bank_card"}>
+                <div id="bank-card" class="item" ?hidden="${paymentType !==
+                  "bank_card"}">
                     <img src="https://res.cloudinary.com/cdn-01ht/image/upload/v1543955073/apps/elements/pages/checkout/credit-card.svg" alt="Bank card payment">
                     <div class="payment-text">Банковская карта</div>
                     <paper-ripple></paper-ripple>
                     <iron-icon icon="ht-elements-checkout-payment-method-changer-icons:keyboard-arrow-down"></iron-icon>
                 </div>
-                <div id="yandex_money" class="item" ?hidden=${paymentType !==
-                  "yandex_money"}>
+                <div id="yandex_money" class="item" ?hidden="${paymentType !==
+                  "yandex_money"}">
                     <img src="https://res.cloudinary.com/cdn-01ht/image/upload/v1543953568/logos/yandexmoney/yandexmoney.svg" alt="Yandex money payment">
                     <paper-ripple></paper-ripple>
                     <iron-icon icon="ht-elements-checkout-payment-method-changer-icons:keyboard-arrow-down"></iron-icon>
                 </div>
-                <div id="sberbank" class="item" ?hidden=${paymentType !==
-                  "sberbank"}>
+                <div id="sberbank" class="item" ?hidden="${paymentType !==
+                  "sberbank"}">
                     <img src="https://res.cloudinary.com/cdn-01ht/image/upload/v1543955924/apps/elements/pages/checkout/sberbank.svg" alt="Sberbank online payment">
                     <paper-ripple></paper-ripple>
                     <iron-icon icon="ht-elements-checkout-payment-method-changer-icons:keyboard-arrow-down"></iron-icon>
                 </div>
-                <div id="qiwi" class="item" ?hidden=${paymentType !== "qiwi"}>
+                <div id="qiwi" class="item" ?hidden="${paymentType !== "qiwi"}">
                     <img src="https://res.cloudinary.com/cdn-01ht/image/upload/v1543956380/apps/elements/pages/checkout/qiwi.svg" alt="Qiwi payment">
                     <paper-ripple></paper-ripple>
                     <iron-icon icon="ht-elements-checkout-payment-method-changer-icons:keyboard-arrow-down"></iron-icon>
                 </div>
-                <div id="webmoney" class="item" ?hidden=${paymentType !==
-                  "webmoney"}>
+                <div id="webmoney" class="item" ?hidden="${paymentType !==
+                  "webmoney"}">
                     <img src="https://res.cloudinary.com/cdn-01ht/image/upload/v1543957056/apps/elements/pages/checkout/webmoney.svg" alt="WebMoney payment">
                     <paper-ripple></paper-ripple>
                     <iron-icon icon="ht-elements-checkout-payment-method-changer-icons:keyboard-arrow-down"></iron-icon>
                 </div>
-                <div id="cash" class="item" ?hidden=${paymentType !== "cash"}>
+                <div id="cash" class="item" ?hidden="${paymentType !== "cash"}">
                     <img src="https://res.cloudinary.com/cdn-01ht/image/upload/v1543957798/apps/elements/pages/checkout/cash.svg" alt="Cash payment">
                     <paper-ripple></paper-ripple>
                     <div class="payment-text">Наличные</div>
@@ -142,60 +143,60 @@ class HTElementsCheckoutPaymentMethodChanger extends LitElement {
                 </div>
             </div>
         </div>
-        <div id="dropdown" ?hidden=${!opened}>
+        <div id="dropdown" ?hidden="${!opened}">
             <div class="list-dropdown">
-                <div id="bank-card" class="item" ?hidden=${paymentType ===
-                  "bank_card"} @click=${_ => {
+                <div id="bank-card" class="item" ?hidden="${paymentType ===
+                  "bank_card"}" @click="${_ => {
       this._change("bank_card");
-    }} @tap=${_ => {
+    }}" @tap="${_ => {
       this._change("bank_card");
-    }}>
+    }}">
                     <img src="https://res.cloudinary.com/cdn-01ht/image/upload/v1543955073/apps/elements/pages/checkout/credit-card.svg" alt="Bank card payment">
                     <div class="payment-text">Банковская карта</div>
                     <paper-ripple></paper-ripple>
                 </div>
-                <div id="yandex_money" class="item" ?hidden=${paymentType ===
-                  "yandex_money"} @click=${_ => {
+                <div id="yandex_money" class="item" ?hidden="${paymentType ===
+                  "yandex_money"}" @click="${_ => {
       this._change("yandex_money");
-    }} @tap=${_ => {
+    }}" @tap="${_ => {
       this._change("yandex_money");
-    }}>
+    }}">
                     <img src="https://res.cloudinary.com/cdn-01ht/image/upload/v1543953568/logos/yandexmoney/yandexmoney.svg" alt="Yandex money payment">
                     <paper-ripple></paper-ripple>
                 </div>
-                <div id="sberbank" class="item" ?hidden=${paymentType ===
+                <div id="sberbank" class="item" ?hidden="${paymentType ===
                   "sberbank"} @click=${_ => {
       this._change("sberbank");
-    }} @tap=${_ => {
+    }}" @tap="${_ => {
       this._change("sberbank");
-    }}>
+    }}">
                     <img src="https://res.cloudinary.com/cdn-01ht/image/upload/v1543955924/apps/elements/pages/checkout/sberbank.svg" alt="Sberbank online payment">
                     <paper-ripple></paper-ripple>
                 </div>
-                <div id="qiwi" class="item" ?hidden=${paymentType ===
-                  "qiwi"} @click=${_ => {
+                <div id="qiwi" class="item" ?hidden="${paymentType ===
+                  "qiwi"}" @click="${_ => {
       this._change("qiwi");
-    }} @tap=${_ => {
+    }}" @tap="${_ => {
       this._change("qiwi");
-    }}>
+    }}">
                     <img src="https://res.cloudinary.com/cdn-01ht/image/upload/v1543956380/apps/elements/pages/checkout/qiwi.svg" alt="Qiwi payment">
                     <paper-ripple></paper-ripple>
                 </div>
-                <div id="webmoney" class="item" ?hidden=${paymentType ===
-                  "webmoney"} @click=${_ => {
+                <div id="webmoney" class="item" ?hidden="${paymentType ===
+                  "webmoney"}" @click="${_ => {
       this._change("webmoney");
-    }} @tap=${_ => {
+    }}" @tap="${_ => {
       this._change("webmoney");
-    }}>
+    }}">
                     <img src="https://res.cloudinary.com/cdn-01ht/image/upload/v1543957056/apps/elements/pages/checkout/webmoney.svg" alt="WebMoney payment">
                     <paper-ripple></paper-ripple>
                 </div>
-                <div id="cash" class="item" ?hidden=${paymentType ===
-                  "cash"} @click=${_ => {
+                <div id="cash" class="item" ?hidden="${paymentType ===
+                  "cash"}" @click="${_ => {
       this._change("cash");
-    }} @tap=${_ => {
+    }}" @tap="${_ => {
       this._change("cash");
-    }}>
+    }}">
                     <img src="https://res.cloudinary.com/cdn-01ht/image/upload/v1543957798/apps/elements/pages/checkout/cash.svg" alt="Cash payment">
                     <paper-ripple></paper-ripple>
                     <div class="payment-text">Наличные</div>
@@ -204,10 +205,6 @@ class HTElementsCheckoutPaymentMethodChanger extends LitElement {
         </div>
     </div>
 `;
-  }
-
-  static get is() {
-    return "ht-elements-checkout-payment-method-changer";
   }
 
   static get properties() {
@@ -241,6 +238,6 @@ class HTElementsCheckoutPaymentMethodChanger extends LitElement {
 }
 
 customElements.define(
-  HTElementsCheckoutPaymentMethodChanger.is,
+  "ht-elements-checkout-payment-method-changer",
   HTElementsCheckoutPaymentMethodChanger
 );

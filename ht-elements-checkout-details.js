@@ -1,16 +1,14 @@
 "use strict";
-import { LitElement, html } from "@polymer/lit-element";
+import { LitElement, html, css } from "lit-element";
 import "@polymer/iron-iconset-svg/iron-iconset-svg.js";
 import "@polymer/iron-icon/iron-icon.js";
 import "@polymer/iron-collapse";
 import "@01ht/ht-elements-orders/ht-elements-orders-item-details.js";
 
 class HTElementsCheckoutDetails extends LitElement {
-  render() {
-    const { data, opened } = this;
-    return html`
-    ${SharedStyles}
-    <style>
+  static styles = [
+    window.SharedStyles,
+    css`<style>
       :host {
         display: flex;
         position: relative;
@@ -64,7 +62,12 @@ class HTElementsCheckoutDetails extends LitElement {
         cursor:pointer;
         user-select: none;
       }
-    </style>
+    </style>`
+  ];
+
+  render() {
+    const { data, opened } = this;
+    return html`
     <iron-iconset-svg size="24" name="ht-elements-orders-item">
       <svg>
           <defs>
@@ -84,24 +87,20 @@ class HTElementsCheckoutDetails extends LitElement {
             <div id="status">Статус: <iron-icon icon="ht-elements-orders-item:access-time"></iron-icon><span class="value">${
               data ? data.statusText : null
             }</span></div>
-            <div id="header" @click=${_ => {
-              this.toggle();
-            }}><div>Детали заказа</div><iron-icon icon="ht-elements-orders-item:${
+            <div id="header" @click="${
+              this.toggle
+            }"><div>Детали заказа</div><iron-icon icon="ht-elements-orders-item:${
             opened ? "expand-less" : "expand-more"
           }"></iron-icon></div>
-          <iron-collapse ?opened=${opened}>
-            <ht-elements-orders-item-details .items=${
+          <iron-collapse ?opened="${opened}">
+            <ht-elements-orders-item-details .items="${
               data.items
-            }></ht-elements-orders-item-details>
+            }"></ht-elements-orders-item-details>
             </iron-collapse>
         </div>`
         : null
     }
 `;
-  }
-
-  static get is() {
-    return "ht-elements-checkout-details";
   }
 
   static get properties() {
@@ -116,4 +115,7 @@ class HTElementsCheckoutDetails extends LitElement {
   }
 }
 
-customElements.define(HTElementsCheckoutDetails.is, HTElementsCheckoutDetails);
+customElements.define(
+  "ht-elements-checkout-details",
+  HTElementsCheckoutDetails
+);

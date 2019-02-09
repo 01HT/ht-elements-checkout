@@ -1,14 +1,12 @@
 "use strict";
-import { LitElement, html } from "@polymer/lit-element";
+import { LitElement, html, css } from "lit-element";
 import "@polymer/iron-iconset-svg/iron-iconset-svg.js";
 import "@polymer/iron-icon/iron-icon.js";
 
 class HTElementsCheckoutOrderCompleted extends LitElement {
-  render() {
-    const { data } = this;
-    return html`
-    ${SharedStyles}
-        <style>
+  static styles = [
+    window.SharedStyles,
+    css`<style>
         :host {
             display: flex;
             position: relative;
@@ -45,7 +43,12 @@ class HTElementsCheckoutOrderCompleted extends LitElement {
             font-size: 16px;
             color: var(--secondary-text-color);
         }
-    </style>
+    </style>`
+  ];
+
+  render() {
+    const { data } = this;
+    return html`
     <iron-iconset-svg size="24" name="ht-elements-checkout-order-completed">
       <svg>
         <defs>
@@ -69,10 +72,6 @@ class HTElementsCheckoutOrderCompleted extends LitElement {
 `;
   }
 
-  static get is() {
-    return "ht-elements-checkout-order-completed";
-  }
-
   static get properties() {
     return {
       data: { type: Object }
@@ -81,6 +80,6 @@ class HTElementsCheckoutOrderCompleted extends LitElement {
 }
 
 customElements.define(
-  HTElementsCheckoutOrderCompleted.is,
+  "ht-elements-checkout-order-completed",
   HTElementsCheckoutOrderCompleted
 );
