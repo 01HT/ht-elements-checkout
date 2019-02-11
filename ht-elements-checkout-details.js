@@ -5,65 +5,64 @@ import "@polymer/iron-icon/iron-icon.js";
 import "@polymer/iron-collapse";
 import "@01ht/ht-elements-orders/ht-elements-orders-item-details.js";
 
-class HTElementsCheckoutDetails extends LitElement {
-  static styles = [
-    window.SharedStyles,
-    css`<style>
-      :host {
-        display: flex;
-        position: relative;
-        box-sizing:border-box;
-      }
+import { styles } from "@01ht/ht-theme/styles";
 
-      #container {
-          display:flex;
+class HTElementsCheckoutDetails extends LitElement {
+  static get styles() {
+    return [
+      styles,
+      css`
+        #container {
+          display: flex;
           flex-direction: column;
           width: 100%;
-      }
+        }
 
-      .value {
-        color: var(--secondary-text-color);
-      }
+        .value {
+          color: var(--secondary-text-color);
+        }
 
-      #number, #status {
-        font-size :14px;
-        font-weight: 500;
-        line-height: 24px;
-      }
+        #number,
+        #status {
+          font-size: 14px;
+          font-weight: 500;
+          line-height: 24px;
+        }
 
-      #status {
-        display:flex;
-        align-items:center;
-        line-height: 16px;
-        margin: 4px 0;
-      }
+        #status {
+          display: flex;
+          align-items: center;
+          line-height: 16px;
+          margin: 4px 0;
+        }
 
-      #status iron-icon {
-        width: 16px;
-        height: 16px;
-        color: var(--secondary-text-color);
-        margin: 0 2px;
-      }
+        #status iron-icon {
+          width: 16px;
+          height: 16px;
+          color: var(--secondary-text-color);
+          margin: 0 2px;
+        }
 
-      .amount .value {
-        font-weight: 500;
-        color: var(--accent-color);
-      }
+        .amount .value {
+          font-weight: 500;
+          color: var(--accent-color);
+        }
 
-      #header {
-        display: flex;
-        justify-content: space-between;
-        align-items:center;
-        font-size: 14px;
-        max-width: 130px;
-        width: 100%;
-        color: var(--accent-color);
-        font-weight: 500;
-        cursor:pointer;
-        user-select: none;
-      }
-    </style>`
-  ];
+        #header {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          font-size: 14px;
+          max-width: 130px;
+          width: 100%;
+          color: var(--accent-color);
+          font-weight: 500;
+          cursor: pointer;
+          user-select: none;
+        }
+      `
+    ];
+  }
 
   render() {
     const { data, opened } = this;

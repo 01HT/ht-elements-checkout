@@ -3,48 +3,41 @@ import { LitElement, html, css } from "lit-element";
 import "@polymer/iron-iconset-svg/iron-iconset-svg.js";
 import "@polymer/iron-icon/iron-icon.js";
 
+import { styles } from "@01ht/ht-theme/styles";
+
 class HTElementsCheckoutOrderCompleted extends LitElement {
-  static styles = [
-    window.SharedStyles,
-    css`<style>
-        :host {
-            display: flex;
-            position: relative;
-            box-sizing: border-box;
-        }
-
-        /* a {
-            color:inherit;
-            text-decoration: none;
-        } */
-
+  static get styles() {
+    return [
+      styles,
+      css`
         iron-icon {
-            width: 12vw;
-            height: auto;
-            max-width: 96px;
-            min-width: 96px;
-            color: var(--accent-color);
+          width: 12vw;
+          height: auto;
+          max-width: 96px;
+          min-width: 96px;
+          color: var(--accent-color);
         }
 
         #container {
-            display:flex;
-            align-items:center;
-            flex-direction:column;
-            margin: 32px auto 32px auto;
+          display: flex;
+          align-items: center;
+          flex-direction: column;
+          margin: 32px auto 32px auto;
         }
 
         #text {
-            margin-top:16px;
+          margin-top: 16px;
         }
 
         #sub {
-            text-align:center;
-            margin: 8px 0 16px 0;
-            font-size: 16px;
-            color: var(--secondary-text-color);
+          text-align: center;
+          margin: 8px 0 16px 0;
+          font-size: 16px;
+          color: var(--secondary-text-color);
         }
-    </style>`
-  ];
+      `
+    ];
+  }
 
   render() {
     const { data } = this;

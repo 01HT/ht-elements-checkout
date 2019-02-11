@@ -10,81 +10,81 @@ import {
   callFirebaseHTTPFunction
 } from "@01ht/ht-client-helper-functions";
 
+import { styles } from "@01ht/ht-theme/styles";
+
 class HTElementsCheckout extends LitElement {
-  static styles = [
-    window.SharedStyles,
-    css`<style>
-      :host {
-        display: block;
-        position: relative;
-        box-sizing: border-box;
-      }
+  static get styles() {
+    return [
+      styles,
+      css`
+        h2 {
+          margin: 0;
+          font-size: 18px;
+        }
 
-      h2 {
-        margin: 0;
-        font-size: 18px;
-      }
+        .card ht-elements-checkout-payment-method-changer {
+          padding: 0;
+        }
 
-      .card ht-elements-checkout-payment-method-changer {
-        padding: 0;
-      }
+        #container {
+          max-width: 600px;
+          margin: auto;
+        }
 
-      #container {
-        max-width: 600px;
-        margin: auto;
-      }
+        .card {
+          font-size: 14px;
+          position: relative;
+          display: flex;
+          flex-direction: column;
+          justify-content: space-between;
+          border-radius: 3px;
+          background: #fff;
+          box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14),
+            0 1px 5px 0 rgba(0, 0, 0, 0.12), 0 3px 1px -2px rgba(0, 0, 0, 0.2);
+        }
 
-      .card {
-        font-size: 14px;
-        position:relative;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        border-radius:3px;
-        background: #fff;
-        box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12), 0 3px 1px -2px rgba(0, 0, 0, 0.2);
-      }
+        .card > * {
+          padding: 16px;
+        }
 
-      .card > * {
-        padding: 16px;
-      }
+        .card .separator {
+          background: #ddd;
+          height: 1px;
+          padding: 0;
+        }
 
-      .card .separator {
-        background: #ddd;
-        height: 1px;
-        padding: 0;
-      }
+        #amount,
+        .actions {
+          display: flex;
+          justify-content: flex-end;
+          align-items: center;
+        }
 
-      #amount, .actions {
-        display:flex;
-        justify-content: flex-end;
-        align-items: center;
-      }
+        .actions {
+          background: #fafafa;
+        }
 
-      .actions {
-        background: #fafafa;
-      }
+        #total-text {
+          font-size: 18px;
+          color: var(--secondary-text-color);
+          margin-right: 8px;
+        }
 
-      #total-text {
-        font-size: 18px;
-        color: var(--secondary-text-color);
-        margin-right: 8px;
-      }
+        #total {
+          display: flex;
+          align-items: center;
+          font-size: 20px;
+          font-weight: 500;
+        }
 
-      #total {
-        display:flex;
-        align-items:center;
-        font-size: 20px;
-        font-weight: 500;
-      }
-
-      span.dollar {
-        margin-right: 2px;
-        font-size: 14px;
-        color: var(--secondary-text-color);
-      }
-    </style>`
-  ];
+        span.dollar {
+          margin-right: 2px;
+          font-size: 14px;
+          color: var(--secondary-text-color);
+        }
+      `
+    ];
+  }
 
   render() {
     const { data, loading, loadingText, paymentType } = this;
@@ -92,7 +92,7 @@ class HTElementsCheckout extends LitElement {
     <div id="container">
       ${
         loading
-          ? html`<ht-spinner page text="${loadingText}"></ht-spinner>`
+          ? html`<ht-spinner page .text="${loadingText}"></ht-spinner>`
           : null
       }
       ${
