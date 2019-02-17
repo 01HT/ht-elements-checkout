@@ -127,6 +127,12 @@ class HTElementsCheckoutPaymentMethodChanger extends LitElement {
                     <paper-ripple></paper-ripple>
                     <iron-icon icon="ht-elements-checkout-payment-method-changer-icons:keyboard-arrow-down"></iron-icon>
                 </div>
+                <div id="tinkoff_bank" class="item" ?hidden="${paymentType !==
+                  "tinkoff_bank"}">
+                    <img src="https://res.cloudinary.com/cdn-01ht/image/upload/v1550393886/apps/elements/pages/checkout/tinkoff.svg" alt="Tinkoff bank online payment">
+                    <paper-ripple></paper-ripple>
+                    <iron-icon icon="ht-elements-checkout-payment-method-changer-icons:keyboard-arrow-down"></iron-icon>
+                </div>
                 <div id="qiwi" class="item" ?hidden="${paymentType !== "qiwi"}">
                     <img src="https://res.cloudinary.com/cdn-01ht/image/upload/v1543956380/apps/elements/pages/checkout/qiwi.svg" alt="Qiwi payment">
                     <paper-ripple></paper-ripple>
@@ -174,6 +180,15 @@ class HTElementsCheckoutPaymentMethodChanger extends LitElement {
       this._change("sberbank");
     }}">
                     <img src="https://res.cloudinary.com/cdn-01ht/image/upload/v1543955924/apps/elements/pages/checkout/sberbank.svg" alt="Sberbank online payment">
+                    <paper-ripple></paper-ripple>
+                </div>
+                <div id="tinkoff_bank" class="item" ?hidden="${paymentType ===
+                  "tinkoff_bank"}" @click=${_ => {
+      this._change("tinkoff_bank");
+    }}" @tap="${_ => {
+      this._change("tinkoff_bank");
+    }}">
+                    <img src="https://res.cloudinary.com/cdn-01ht/image/upload/v1550393886/apps/elements/pages/checkout/tinkoff.svg" alt="Tinkoff bank online payment">
                     <paper-ripple></paper-ripple>
                 </div>
                 <div id="qiwi" class="item" ?hidden="${paymentType ===
