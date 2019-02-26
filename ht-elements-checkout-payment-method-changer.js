@@ -252,6 +252,13 @@ class HTElementsCheckoutPaymentMethodChanger extends LitElement {
   _change(paymentType) {
     this.paymentType = paymentType;
     this._close();
+    this.dispatchEvent(
+      new CustomEvent("type-changed", {
+        bubbles: true,
+        composed: true,
+        detail: paymentType
+      })
+    );
   }
 }
 
