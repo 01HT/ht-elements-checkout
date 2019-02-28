@@ -72,6 +72,7 @@ class HTElementsCheckoutDetails extends LitElement {
           <defs>
             <g id="expand-less"><path d="M12 8l-6 6 1.41 1.41L12 10.83l4.59 4.58L18 14z"></path></g>
             <g id="expand-more"><path d="M16.59 8.59L12 13.17 7.41 8.59 6 10l6 6 6-6z"></path></g>
+            <g id="close"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></g>
             <g id="access-time"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"></path></g>
           </defs>
       </svg>
@@ -83,9 +84,11 @@ class HTElementsCheckoutDetails extends LitElement {
           <div id="number">№ заказа: <span class="value">${
             data.orderNumber
           }</span></div>
-            <div id="status">Статус: <iron-icon icon="ht-elements-orders-item:access-time"></iron-icon><span class="value">${
-              data ? data.statusText : null
-            }</span></div>
+            <div id="status">Статус: <iron-icon icon="ht-elements-orders-item:${
+              data.canceled ? "close" : "access-time"
+            }"></iron-icon><span class="value">${
+            data ? data.statusText : null
+          }</span></div>
             <div id="header" @click="${
               this.toggle
             }"><div>Детали заказа</div><iron-icon icon="ht-elements-orders-item:${
