@@ -1,6 +1,7 @@
 "use strict";
 import { LitElement, html, css } from "lit-element";
 import "@polymer/paper-button";
+import "@polymer/paper-input/paper-input.js";
 
 import "./ht-elements-checkout-payment-method-changer.js";
 import "./ht-elements-checkout-order-completed.js";
@@ -20,6 +21,10 @@ class HTElementsCheckout extends LitElement {
         h2 {
           margin: 0;
           font-size: 18px;
+        }
+
+        paper-input {
+          margin-bottom: 8px;
         }
 
         .card ht-elements-checkout-payment-method-changer {
@@ -107,9 +112,18 @@ class HTElementsCheckout extends LitElement {
           ? html`
             <h1 class="mdc-typography--headline5">Оплата</h1>
         <div id="settings" class="card">
-          <ht-elements-checkout-payment-method-changer .paymentType="${paymentType}"></ht-elements-checkout-payment-method-changer>
+          ${
+            !data.canceled
+              ? html`<ht-elements-checkout-payment-method-changer .paymentType="${paymentType}"></ht-elements-checkout-payment-method-changer>`
+              : null
+          }
           <div class="separator"></div>
           <div id="order-details">
+            ${
+              paymentType === true
+                ? html`<paper-input id="qiwi-phone-number" label="Номер QIWI кошелька (номер телефона)" allowed-pattern="^[0-9a]+$" maxlength="20">`
+                : null
+            }
             <ht-elements-checkout-details .data="${data}"></ht-elements-checkout-details>
           </div>
           <div class="separator"></div>
@@ -118,10 +132,15 @@ class HTElementsCheckout extends LitElement {
               data ? data.amount : null
             }</div>
           </div>
-          <div class="separator"></div>
+          ${
+            !data.canceled
+              ? html`<div class="separator"></div>
+
           <div class="actions">
             <paper-button raised @click="${this._pay}">Оплатить</paper-button>
-          </div>
+          </div>`
+              : null
+          }
         </div>`
           : null
       }
@@ -136,6 +155,13 @@ class HTElementsCheckout extends LitElement {
       loadingText: { type: String },
       paymentType: { type: String }
     };
+  }
+
+  firstUpdated() {
+    // this.addEventListener("type-changed", e => {
+    //   e.stopPropagation();
+    //   this.paymentType = e.detail;
+    // });
   }
 
   shouldUpdate(changedProperties) {
@@ -162,6 +188,13 @@ class HTElementsCheckout extends LitElement {
       this.loadingText = "Подготовка платежной системы";
       let orderId = this.data.orderId;
       let paymentMethod = this.paymentTypeBlock.paymentType;
+      let requestBody = {
+        orderId: orderId,
+        paymentType: paymentMethod
+      };
+      // if (paymentMethod === "qiwi") {
+      //   requestBody.phone = this.shadowRoot.querySelector("paper-input").value;
+      // }
       let response = await callFirebaseHTTPFunction({
         name: "httpsOrdersCreatePayment",
         authorization: true,
@@ -170,10 +203,7 @@ class HTElementsCheckout extends LitElement {
           headers: {
             "Content-Type": "application/json"
           },
-          body: JSON.stringify({
-            orderId: orderId,
-            paymentType: paymentMethod
-          })
+          body: JSON.stringify(requestBody)
         }
       });
       let paymentPageURL = response.confirmation.confirmation_url;
