@@ -110,42 +110,56 @@ class HTElementsCheckoutPaymentMethodChanger extends LitElement {
             <div class="list-dropdown">
                 <div id="bank-card" class="item" ?hidden="${paymentType !==
                   "bank_card"}">
-                    <img src="https://res.cloudinary.com/cdn-01ht/image/upload/v1543955073/apps/elements/pages/checkout/credit-card.svg" alt="Bank card payment">
+                    <img src="${
+                      window.appConfig.cloudinary.url
+                    }/image/upload/v1543955073/apps/elements/pages/checkout/credit-card.svg" alt="Bank card payment">
                     <div class="payment-text">Банковская карта</div>
                     <paper-ripple></paper-ripple>
                     <iron-icon icon="ht-elements-checkout-payment-method-changer-icons:keyboard-arrow-down"></iron-icon>
                 </div>
                 <div id="yandex_money" class="item" ?hidden="${paymentType !==
                   "yandex_money"}">
-                    <img src="https://res.cloudinary.com/cdn-01ht/image/upload/v1543953568/logos/yandexmoney/yandexmoney.svg" alt="Yandex money payment">
+                    <img src="${
+                      window.appConfig.cloudinary.url
+                    }/image/upload/v1543953568/logos/yandexmoney/yandexmoney.svg" alt="Yandex money payment">
                     <paper-ripple></paper-ripple>
                     <iron-icon icon="ht-elements-checkout-payment-method-changer-icons:keyboard-arrow-down"></iron-icon>
                 </div>
                 <div id="sberbank" class="item" ?hidden="${paymentType !==
                   "sberbank"}">
-                    <img src="https://res.cloudinary.com/cdn-01ht/image/upload/v1543955924/apps/elements/pages/checkout/sberbank.svg" alt="Sberbank online payment">
+                    <img src="${
+                      window.appConfig.cloudinary.url
+                    }/image/upload/v1543955924/apps/elements/pages/checkout/sberbank.svg" alt="Sberbank online payment">
                     <paper-ripple></paper-ripple>
                     <iron-icon icon="ht-elements-checkout-payment-method-changer-icons:keyboard-arrow-down"></iron-icon>
                 </div>
                 <div id="tinkoff_bank" class="item" ?hidden="${paymentType !==
                   "tinkoff_bank"}">
-                    <img src="https://res.cloudinary.com/cdn-01ht/image/upload/v1550393886/apps/elements/pages/checkout/tinkoff.svg" alt="Tinkoff bank online payment">
+                    <img src="${
+                      window.appConfig.cloudinary.url
+                    }/image/upload/v1550393886/apps/elements/pages/checkout/tinkoff.svg" alt="Tinkoff bank online payment">
                     <paper-ripple></paper-ripple>
                     <iron-icon icon="ht-elements-checkout-payment-method-changer-icons:keyboard-arrow-down"></iron-icon>
                 </div>
                 <div id="qiwi" class="item" ?hidden="${paymentType !== "qiwi"}">
-                    <img src="https://res.cloudinary.com/cdn-01ht/image/upload/v1543956380/apps/elements/pages/checkout/qiwi.svg" alt="Qiwi payment">
+                    <img src="${
+                      window.appConfig.cloudinary.url
+                    }/image/upload/v1543956380/apps/elements/pages/checkout/qiwi.svg" alt="Qiwi payment">
                     <paper-ripple></paper-ripple>
                     <iron-icon icon="ht-elements-checkout-payment-method-changer-icons:keyboard-arrow-down"></iron-icon>
                 </div>
                 <div id="webmoney" class="item" ?hidden="${paymentType !==
                   "webmoney"}">
-                    <img src="https://res.cloudinary.com/cdn-01ht/image/upload/v1543957056/apps/elements/pages/checkout/webmoney.svg" alt="WebMoney payment">
+                    <img src="${
+                      window.appConfig.cloudinary.url
+                    }/image/upload/v1543957056/apps/elements/pages/checkout/webmoney.svg" alt="WebMoney payment">
                     <paper-ripple></paper-ripple>
                     <iron-icon icon="ht-elements-checkout-payment-method-changer-icons:keyboard-arrow-down"></iron-icon>
                 </div>
                 <div id="cash" class="item" ?hidden="${paymentType !== "cash"}">
-                    <img src="https://res.cloudinary.com/cdn-01ht/image/upload/v1543957798/apps/elements/pages/checkout/cash.svg" alt="Cash payment">
+                    <img src="${
+                      window.appConfig.cloudinary.url
+                    }/image/upload/v1543957798/apps/elements/pages/checkout/cash.svg" alt="Cash payment">
                     <paper-ripple></paper-ripple>
                     <div class="payment-text">Наличные</div>
                     <iron-icon icon="ht-elements-checkout-payment-method-changer-icons:keyboard-arrow-down"></iron-icon>
@@ -160,7 +174,9 @@ class HTElementsCheckoutPaymentMethodChanger extends LitElement {
     }}" @tap="${_ => {
       this._change("bank_card");
     }}">
-                    <img src="https://res.cloudinary.com/cdn-01ht/image/upload/v1543955073/apps/elements/pages/checkout/credit-card.svg" alt="Bank card payment">
+                    <img src="${
+                      window.appConfig.cloudinary.url
+                    }/image/upload/v1543955073/apps/elements/pages/checkout/credit-card.svg" alt="Bank card payment">
                     <div class="payment-text">Банковская карта</div>
                     <paper-ripple></paper-ripple>
                 </div>
@@ -170,7 +186,9 @@ class HTElementsCheckoutPaymentMethodChanger extends LitElement {
     }}" @tap="${_ => {
       this._change("yandex_money");
     }}">
-                    <img src="https://res.cloudinary.com/cdn-01ht/image/upload/v1543953568/logos/yandexmoney/yandexmoney.svg" alt="Yandex money payment">
+                    <img src="${
+                      window.appConfig.cloudinary.url
+                    }/image/upload/v1543953568/logos/yandexmoney/yandexmoney.svg" alt="Yandex money payment">
                     <paper-ripple></paper-ripple>
                 </div>
                 <div id="sberbank" class="item" ?hidden="${paymentType ===
@@ -179,7 +197,9 @@ class HTElementsCheckoutPaymentMethodChanger extends LitElement {
     }}" @tap="${_ => {
       this._change("sberbank");
     }}">
-                    <img src="https://res.cloudinary.com/cdn-01ht/image/upload/v1543955924/apps/elements/pages/checkout/sberbank.svg" alt="Sberbank online payment">
+                    <img src="${
+                      window.appConfig.cloudinary.url
+                    }/image/upload/v1543955924/apps/elements/pages/checkout/sberbank.svg" alt="Sberbank online payment">
                     <paper-ripple></paper-ripple>
                 </div>
                 <div id="tinkoff_bank" class="item" ?hidden="${paymentType ===
@@ -188,7 +208,9 @@ class HTElementsCheckoutPaymentMethodChanger extends LitElement {
     }}" @tap="${_ => {
       this._change("tinkoff_bank");
     }}">
-                    <img src="https://res.cloudinary.com/cdn-01ht/image/upload/v1550393886/apps/elements/pages/checkout/tinkoff.svg" alt="Tinkoff bank online payment">
+                    <img src="${
+                      window.appConfig.cloudinary.url
+                    }/image/upload/v1550393886/apps/elements/pages/checkout/tinkoff.svg" alt="Tinkoff bank online payment">
                     <paper-ripple></paper-ripple>
                 </div>
                 <div id="qiwi" class="item" ?hidden="${paymentType ===
@@ -197,7 +219,9 @@ class HTElementsCheckoutPaymentMethodChanger extends LitElement {
     }}" @tap="${_ => {
       this._change("qiwi");
     }}">
-                    <img src="https://res.cloudinary.com/cdn-01ht/image/upload/v1543956380/apps/elements/pages/checkout/qiwi.svg" alt="Qiwi payment">
+                    <img src="${
+                      window.appConfig.cloudinary.url
+                    }/image/upload/v1543956380/apps/elements/pages/checkout/qiwi.svg" alt="Qiwi payment">
                     <paper-ripple></paper-ripple>
                 </div>
                 <div id="webmoney" class="item" ?hidden="${paymentType ===
@@ -206,7 +230,9 @@ class HTElementsCheckoutPaymentMethodChanger extends LitElement {
     }}" @tap="${_ => {
       this._change("webmoney");
     }}">
-                    <img src="https://res.cloudinary.com/cdn-01ht/image/upload/v1543957056/apps/elements/pages/checkout/webmoney.svg" alt="WebMoney payment">
+                    <img src="${
+                      window.appConfig.cloudinary.url
+                    }/image/upload/v1543957056/apps/elements/pages/checkout/webmoney.svg" alt="WebMoney payment">
                     <paper-ripple></paper-ripple>
                 </div>
                 <div id="cash" class="item" ?hidden="${paymentType ===
@@ -215,7 +241,9 @@ class HTElementsCheckoutPaymentMethodChanger extends LitElement {
     }}" @tap="${_ => {
       this._change("cash");
     }}">
-                    <img src="https://res.cloudinary.com/cdn-01ht/image/upload/v1543957798/apps/elements/pages/checkout/cash.svg" alt="Cash payment">
+                    <img src="${
+                      window.appConfig.cloudinary.url
+                    }/image/upload/v1543957798/apps/elements/pages/checkout/cash.svg" alt="Cash payment">
                     <paper-ripple></paper-ripple>
                     <div class="payment-text">Наличные</div>
                 </div>
